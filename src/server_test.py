@@ -93,7 +93,7 @@ t2.start()
 
 #Main thread that handles bridging data from the host to the robots
 while  True:
-	print 'waiting for host broadcast.'
+	print ('waiting for host broadcast.')
 	host = broadcastQueue.get(True) #block until there is data from the broadcast thread
 	fKeepAlive = True
 
@@ -110,9 +110,9 @@ while  True:
 	try:
 		sock.bind((LOCAL_IP, PORT))
 	except socket.error as msg:
-		print 'Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]  
+		print('Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		sys.exit()
-	print "Alive"
+	print("Alive")
 	
 	#reset timers for first run after the robot has connected to the host
 	keepAliveTimer = time.time()
@@ -128,7 +128,7 @@ while  True:
 			keepAliveTimer = time.time()
 		if time.time() - keepAliveTimer > KEEP_ALIVE_TIMEOUT:
 			fKeepAlive = False
-			print "Connection Died"
+			print("Connection Died")
 			break
 		
 		#if controller data has come from the host send it to the arduino

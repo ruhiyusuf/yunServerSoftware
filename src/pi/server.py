@@ -56,7 +56,7 @@ def setServoPulse(channel, pulse):
 # loging wrapper function
 def logWrite(strng):
     log.write("[" + str(time.time()) + "]" + strng + "\n")
-    print strng
+    print(strng)
 
 
 # Error log file, overwtite file from last reset
@@ -64,7 +64,7 @@ logFile = "./elog_" + str(time.time()) + ".txt"
 try:
     log = open(logFile, "w")
 except Exception as f:
-    print "Uhhh... check that your hard drive isn't on fire!"
+    print("Uhhh... check that your hard drive isn't on fire!")
     sys.exit(1)
 else:
     logWrite("log File" + logFile)
@@ -104,7 +104,7 @@ def pwmControlThread():
 
     # thread main loop
     while True:
-	time.sleep(.005)
+        time.sleep(.005)
         # check for data that needs to be bridged to arduino
         dataFlag = True
         if not serialRealTimeQueue.empty():
@@ -115,11 +115,11 @@ def pwmControlThread():
         # if data was recieved parse and update pwm hat
         if dataFlag:
             data = data[5:-1]
-            print data
+            print(data)
             data_nums = [int(x) for x in data.split(':') if x.strip()]
-            print " ", data_nums[0], " ", data_nums[1]
+            print(" ", data_nums[0], " ", data_nums[1])
             leftMtr,rightMtr = t.transform(data_nums[0],data_nums[1])
-            print " ", leftMtr , " ", rightMtr
+            print(" ", leftMtr , " ", rightMtr)
             setServoPulse(LEFT_MOT, leftMtr)
             setServoPulse(RIGHT_MOT, rightMtr)
 
@@ -140,7 +140,7 @@ def pwmControlThread():
                 leftIntake = Transform.MOTOR_IDLE
                 rightIntake = Transform.MOTOR_IDLE
  
-            print " " , leftIntake, " ", rightIntake
+            print(" " , leftIntake, " ", rightIntake)
 
             setServoPulse(LEFT_MANIP,leftIntake)
             setServoPulse(RIGHT_MANIP,rightIntake)
@@ -154,7 +154,7 @@ def pwmControlThread():
             setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
 
             watchdog = time.time()
-            print "you need to feed the dogs"
+            print("you need to feed the dogs")
 
 def networkComThread():
     

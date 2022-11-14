@@ -54,7 +54,7 @@ class Adafruit_I2C(object):
     return val
 
   def errMsg(self):
-    print "Error accessing 0x%02X: Check your I2C address" % self.address
+    print("Error accessing 0x%02X: Check your I2C address" % self.address)
     return -1
 
   def write8(self, reg, value):
@@ -62,8 +62,8 @@ class Adafruit_I2C(object):
     try:
       self.bus.write_byte_data(self.address, reg, value)
       if self.debug:
-        print "I2C: Wrote 0x%02X to register 0x%02X" % (value, reg)
-    except IOError, err:
+        print("I2C: Wrote 0x%02X to register 0x%02X" % (value, reg))
+    except IOError as err:
       return self.errMsg()
 
   def write16(self, reg, value):
@@ -81,18 +81,18 @@ class Adafruit_I2C(object):
     try:
       self.bus.write_byte(self.address, value)
       if self.debug:
-        print "I2C: Wrote 0x%02X" % value
-    except IOError, err:
+        print("I2C: Wrote 0x%02X" % value)
+    except IOError as err:
       return self.errMsg()
 
   def writeList(self, reg, list):
     "Writes an array of bytes using I2C format"
     try:
       if self.debug:
-        print "I2C: Writing list to register 0x%02X:" % reg
-        print list
+        print("I2C: Writing list to register 0x%02X:" % reg)
+        print(list)
       self.bus.write_i2c_block_data(self.address, reg, list)
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
   def readList(self, reg, length):
@@ -139,7 +139,7 @@ class Adafruit_I2C(object):
       if not little_endian:
         result = ((result << 8) & 0xFF00) + (result >> 8)
       if (self.debug):
-        print "I2C: Device 0x%02X returned 0x%04X from reg 0x%02X" % (self.address, result & 0xFFFF, reg)
+        print("I2C: Device 0x%02X returned 0x%04X from reg 0x%02X" % (self.address, result & 0xFFFF, reg))
       return result
     except IOError, err:
       return self.errMsg()
@@ -156,6 +156,6 @@ class Adafruit_I2C(object):
 if __name__ == '__main__':
   try:
     bus = Adafruit_I2C(address=0)
-    print "Default I2C bus is accessible"
+    print("Default I2C bus is accessible")
   except:
-    print "Error accessing default I2C bus"
+    print("Error accessing default I2C bus")
