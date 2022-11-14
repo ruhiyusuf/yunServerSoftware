@@ -63,7 +63,8 @@ class Adafruit_I2C(object):
       self.bus.write_byte_data(self.address, reg, value)
       if self.debug:
         print("I2C: Wrote 0x%02X to register 0x%02X" % (value, reg))
-    except IOError as err:
+#    except IOError as err:
+    except e:
       return self.errMsg()
 
   def write16(self, reg, value):
@@ -104,7 +105,8 @@ class Adafruit_I2C(object):
          (self.address, reg))
         print results
       return results
-    except IOError, err:
+#    except IOError, err:
+     except e:
       return self.errMsg()
 
   def readU8(self, reg):

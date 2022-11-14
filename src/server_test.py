@@ -3,7 +3,8 @@ import select
 import serial
 import sys
 import time
-from Queue import Queue
+# from Queue import Queue
+import queue
 from threading import Thread
  
 #network related variables
@@ -38,7 +39,7 @@ def broadcastListener():
 		bCastSock.bind((BROADCAST_IP, BROADCAST_PORT))
 	except socket.error as msg:
 		bCastSock.close()
-		print 'Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]  
+		print('Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 
 	while True:   
 		readReady = select.select([bCastSock], [], [])
@@ -62,7 +63,7 @@ def nameResponse():
 			try:
 				nameSock.sendto("ROB:" + ROBOT_NAME,(host[0], PORT))
 			except socket.error as msg:
-				print ' Could not send robot name to ' + host[0] + ' error code: ' + msg[1]
+				print(' Could not send robot name to ' + host[0] + ' error code: ' + msg[1])
 				
 		time.sleep(.2)
 		
@@ -80,10 +81,10 @@ def arduinoCommWrite(data):
 	
 
 #start program
-mainQueue = Queue()
-broadcastQueue = Queue()
-nameQueue = Queue()
-serialQueue = Queue()
+mainQueue = queue.Queue()
+broadcastQueue = queue.Queue()
+nameQueue = queue.Queue()
+serialQueue = queue.Queue()
 
 t1 = Thread(target=broadcastListener, args=())
 t2 = Thread(target=nameResponse, args=())
@@ -99,7 +100,7 @@ while  True:
 
 	#setup arduino serial comm
 	ser = serial.Serial('/dev/ttyATH0', 115200) # open serial port
-	print ser.portstr
+	print(ser.portstr)
 	ser.open()
 	ser.flushInput()
 	ser.flushOutput()
