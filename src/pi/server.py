@@ -5,10 +5,11 @@ import select
 import sys
 import time
 import atexit
-from Queue import Queue
+import queue
 from threading import Thread
-import ConfigParser
-from smbus2 import SMBus
+import configparser
+from smbus import SMBus
+# from smbus2 import SMBus
 
 # network related variables
 PORT = 2380  # Game host port
@@ -22,14 +23,14 @@ NAME_BROADCAST_TIMEOUT = 1
 WATCHDOG_DELAY = 0.2
 
 # thread communication queues
-broadcastQueue = Queue()
-serialRealTimeQueue = Queue()
-networkRealTimeQueue = Queue()
-networkQueue = Queue()
+broadcastQueue = queue.Queue()
+serialRealTimeQueue = queue.Queue()
+networkRealTimeQueue = queue.Queue()
+networkQueue = queue.Queue()
 
 
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('/home/pi/yunServerSoftware/src/pi/config.ini')
 
 # change this to the relevant team name when the script is loaded to the yun
