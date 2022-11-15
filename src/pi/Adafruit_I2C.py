@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import re
-import smbus
+from smbus2 import SMBus
 
 # ===========================================================================
 # Adafruit_I2C Class
@@ -40,7 +40,9 @@ class Adafruit_I2C(object):
     # Alternatively, you can hard-code the bus version below:
     # self.bus = smbus.SMBus(0); # Force I2C0 (early 256MB Pi's)
     # self.bus = smbus.SMBus(1); # Force I2C1 (512MB Pi's)
-    self.bus = smbus.SMBus(busnum if busnum >= 0 else Adafruit_I2C.getPiI2CBusNumber())
+    self.bus = SMBus(Adafruit_I2C.getPiI2CBusNumber())
+    # self.bus = SMBus(busnum if busnum >= 0 else Adafruit_I2C.getPiI2CBusNumber())
+    # self.bus = smbus2.SMBus(busnum if busnum >= 0 else Adafruit_I2C.getPiI2CBusNumber())
     self.debug = debug
 
   def reverseByteOrder(self, data):
@@ -63,8 +65,7 @@ class Adafruit_I2C(object):
       self.bus.write_byte_data(self.address, reg, value)
       if self.debug:
         print("I2C: Wrote 0x%02X to register 0x%02X" % (value, reg))
-#    except IOError as err:
-    except e:
+    except IOError as err:
       return self.errMsg()
 
   def write16(self, reg, value):
@@ -74,7 +75,7 @@ class Adafruit_I2C(object):
       if self.debug:
         print ("I2C: Wrote 0x%02X to register pair 0x%02X,0x%02X" %
          (value, reg, reg+1))
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
   def writeRaw8(self, value):
@@ -103,10 +104,9 @@ class Adafruit_I2C(object):
       if self.debug:
         print ("I2C: Device 0x%02X returned the following from reg 0x%02X" %
          (self.address, reg))
-        print results
+        print(results)
       return results
-#    except IOError, err:
-     except e:
+    except IOError as err:
       return self.errMsg()
 
   def readU8(self, reg):
@@ -117,7 +117,7 @@ class Adafruit_I2C(object):
         print ("I2C: Device 0x%02X returned 0x%02X from reg 0x%02X" %
          (self.address, result & 0xFF, reg))
       return result
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
   def readS8(self, reg):
@@ -129,7 +129,7 @@ class Adafruit_I2C(object):
         print ("I2C: Device 0x%02X returned 0x%02X from reg 0x%02X" %
          (self.address, result & 0xFF, reg))
       return result
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
   def readU16(self, reg, little_endian=True):
@@ -143,7 +143,7 @@ class Adafruit_I2C(object):
       if (self.debug):
         print("I2C: Device 0x%02X returned 0x%04X from reg 0x%02X" % (self.address, result & 0xFFFF, reg))
       return result
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
   def readS16(self, reg, little_endian=True):
@@ -152,7 +152,7 @@ class Adafruit_I2C(object):
       result = self.readU16(reg,little_endian)
       if result > 32767: result -= 65536
       return result
-    except IOError, err:
+    except IOError as err:
       return self.errMsg()
 
 if __name__ == '__main__':

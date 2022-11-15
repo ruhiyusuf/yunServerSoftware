@@ -8,6 +8,7 @@ import atexit
 from Queue import Queue
 from threading import Thread
 import ConfigParser
+from smbus2 import SMBus
 
 # network related variables
 PORT = 2380  # Game host port
