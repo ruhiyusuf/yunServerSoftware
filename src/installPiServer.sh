@@ -6,7 +6,7 @@ sudo raspi-config nonint do_boot_behaviour B2
 sudo raspi-config nonint do_i2c 0
 
 #git clone https://github.com/Saint-Francis-Robotics-Team2367/yunServerSoftware.git
-
+sleep 20
 echo "#!/bin/sh
 cd /home/pi/
 while :

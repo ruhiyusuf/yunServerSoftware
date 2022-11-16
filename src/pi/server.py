@@ -234,6 +234,7 @@ pwmThread.start()
 broadcastThread.start()
 networkThread.start()
 
+logWrite("Started all threads")
 atexit.register(cleanup)
 
 while True:
@@ -246,5 +247,5 @@ while True:
     if not networkThread.isAlive():
         networkThread.run()
         logWrite("Restarting network thread")
-
+    logWrite("loopdey-loop!")
     time.sleep(1)
