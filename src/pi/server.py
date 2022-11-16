@@ -31,7 +31,7 @@ networkQueue = queue.Queue()
 
 
 config = configparser.ConfigParser()
-config.read('/home/pi/yunServerSoftware/src/pi/config.ini')
+config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
 
 # change this to the relevant team name when the script is loaded to the yun
 ROBOT_NAME = config.get('Main','TeamName')
