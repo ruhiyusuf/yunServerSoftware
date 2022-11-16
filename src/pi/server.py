@@ -5,11 +5,11 @@ import select
 import sys
 import time
 import atexit
-import queue
+from Queue import Queue
+from robot import Robot
+from motor_controller import MotorController
 from threading import Thread
-import configparser
-from smbus import SMBus
-# from smbus2 import SMBus
+import ConfigParser
 
 # network related variables
 PORT = 2380  # Game host port
@@ -23,15 +23,15 @@ NAME_BROADCAST_TIMEOUT = 1
 WATCHDOG_DELAY = 0.2
 
 # thread communication queues
-broadcastQueue = queue.Queue()
-serialRealTimeQueue = queue.Queue()
-networkRealTimeQueue = queue.Queue()
-networkQueue = queue.Queue()
+broadcastQueue = Queue()
+serialRealTimeQueue = Queue()
+networkRealTimeQueue = Queue()
+networkQueue = Queue()
 
 
 
-config = configparser.ConfigParser()
-config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
+config = ConfigParser.ConfigParser()
+config.read('/home/pi/yunServerSoftware/src/pi/config.ini')
 
 # change this to the relevant team name when the script is loaded to the yun
 ROBOT_NAME = config.get('Main','TeamName')
@@ -58,7 +58,7 @@ def setServoPulse(channel, pulse):
 # loging wrapper function
 def logWrite(strng):
     log.write("[" + str(time.time()) + "]" + strng + "\n")
-    print(strng)
+    print strng
 
 
 # Error log file, overwtite file from last reset
@@ -66,7 +66,7 @@ logFile = "./elog_" + str(time.time()) + ".txt"
 try:
     log = open(logFile, "w")
 except Exception as f:
-    print("Uhhh... check that your hard drive isn't on fire!")
+    print "Uhhh... check that your hard drive isn't on fire!"
     sys.exit(1)
 else:
     logWrite("log File" + logFile)
@@ -85,14 +85,12 @@ def broadcastListener():
         logWrite('Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1] + "\n")
         sys.exit(1)
 
-    lastKeepAlive = time.time()
     while True:
         readReady = select.select([bCastSock], [], [], 0.02)
         if readReady[0]:
             data, sender = bCastSock.recvfrom(1500)
             # check that the datagram is a alive packet
             if data == sender[0]:
-                lastKeepAlive = time.time()
                 broadcastQueue.put(sender)
         time.sleep(.05)
 
@@ -100,10 +98,7 @@ def broadcastListener():
 # serial communication thread
 def pwmControlThread():
     # setup arduino serial comm
-    pwm.setPWMFreq(50)
-    t = Transform(True, False) #invert one motor and not the other when constructing
-    watchdog = time.time()
-
+    robot = Robot()
     # thread main loop
     while True:
         time.sleep(.005)
@@ -117,46 +112,14 @@ def pwmControlThread():
         # if data was recieved parse and update pwm hat
         if dataFlag:
             data = data[5:-1]
-            print(data)
+            print data
             data_nums = [int(x) for x in data.split(':') if x.strip()]
-            print(" ", data_nums[0], " ", data_nums[1])
-            leftMtr,rightMtr = t.transform(data_nums[0],data_nums[1])
-            print(" ", leftMtr , " ", rightMtr)
-            setServoPulse(LEFT_MOT, leftMtr)
-            setServoPulse(RIGHT_MOT, rightMtr)
+            robot.robot_control(data_nums[0],data_nums[1],data_nums[2],data_nums[3], data_nums[4] == 255, data_nums[4] == 0)
 
-            Transform.MOTOR_MIN = data_nums[5]*10
-            Transform.MOTOR_IDLE = data_nums[6]*10
-            Transform.MOTOR_MAX = data_nums[7]*10
-
-
-            leftIntake = Transform.MOTOR_IDLE
-            rightIntake = Transform.MOTOR_IDLE
-            if data_nums[2] > 127 + 10: # if left trigger pressed (i think) spin motors in opposite direction
-                leftIntake = Transform.map_range(data_nums[2],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MAX)
-                rightIntake = Transform.map_range(data_nums[2],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MIN)
-            elif data_nums[3] > 127 + 10: # if right trigger pressed
-                leftIntake = Transform.map_range(data_nums[3],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MIN)
-                rightIntake = Transform.map_range(data_nums[3],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MAX)
-            else :
-                leftIntake = Transform.MOTOR_IDLE
-                rightIntake = Transform.MOTOR_IDLE
- 
-            print(" " , leftIntake, " ", rightIntake)
-
-            setServoPulse(LEFT_MANIP,leftIntake)
-            setServoPulse(RIGHT_MANIP,rightIntake)
-
-            watchdog = time.time()
-
-        if watchdog + WATCHDOG_DELAY < time.time():
-            setServoPulse(LEFT_MOT, Transform.MOTOR_IDLE)
-            setServoPulse(RIGHT_MOT, Transform.MOTOR_IDLE)
-            setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
-            setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
-
-            watchdog = time.time()
-            print("you need to feed the dogs")
+        for mc in dir(robot):
+            if isinstance(mc,MotorController):
+                if mc.watchdog + WATCHDOG_DELAY < time.time():
+                    mc.set_scaled_output(127)
 
 def networkComThread():
     
@@ -184,7 +147,7 @@ def networkComThread():
             time.sleep(.005)
             if not broadcastQueue.empty():
                 while not broadcastQueue.empty():
-                    qPop = broadcastQueue.get()
+                    broadcastQueue.get()
                 keepAliveTimer = time.time()
             # if we haven't recieved a keep alive packet in a while kill the connection
             if time.time() - keepAliveTimer > KEEP_ALIVE_TIMEOUT:
@@ -215,10 +178,6 @@ def networkComThread():
 # cleanup function
 def cleanup():
     logWrite('cleanup')
-    setServoPulse(LEFT_MOT,Transform.MOTOR_IDLE)
-    setServoPulse(RIGHT_MOT,Transform.MOTOR_IDLE)	
-    setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
-    setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
 
 
 # Main program start
@@ -234,7 +193,6 @@ pwmThread.start()
 broadcastThread.start()
 networkThread.start()
 
-logWrite("Started all threads")
 atexit.register(cleanup)
 
 while True:
@@ -247,5 +205,5 @@ while True:
     if not networkThread.isAlive():
         networkThread.run()
         logWrite("Restarting network thread")
-    logWrite("loopdey-loop!")
+
     time.sleep(1)
