@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import re
-from smbus import SMBus
+from smbus2 import SMBus
 # from smbus2 import SMBus
 
 # ===========================================================================

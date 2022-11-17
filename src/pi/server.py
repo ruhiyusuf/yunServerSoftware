@@ -8,7 +8,7 @@ import atexit
 import queue
 from threading import Thread
 import configparser
-from smbus import SMBus
+from smbus2 import SMBus
 # from smbus2 import SMBus
 
 # network related variables
