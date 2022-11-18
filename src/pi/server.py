@@ -28,8 +28,6 @@ serialRealTimeQueue = queue.Queue()
 networkRealTimeQueue = queue.Queue()
 networkQueue = queue.Queue()
 
-
-
 config = configparser.ConfigParser()
 config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
 
@@ -52,7 +50,8 @@ def setServoPulse(channel, pulse):
     # print "%d us per bit" % pulseLength
     pulse /= pulseLength
     # print "%d tick" % pulse
-    pwm.setPWM(channel, 0, int(pulse))
+    pwm.setPWM(channel, 0, int(pulse)) # change: casted pulse to int
+
 
 
 # loging wrapper function
