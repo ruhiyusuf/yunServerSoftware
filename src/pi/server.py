@@ -165,6 +165,7 @@ def networkComThread():
     netSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         netSock.bind((LOCAL_IP, PORT))
+				logWrite("networkComThread: bind to socket")
     except socket.error as msg:
         logWrite('Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
         sys.exit(1)
