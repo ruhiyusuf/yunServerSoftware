@@ -31,7 +31,7 @@ networkQueue = queue.Queue()
 
 
 config = configparser.ConfigParser()
-config.read('/home/pi/yunServerSoftware/src/pi/config.ini')
+config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
 
 # change this to the relevant team name when the script is loaded to the yun
 ROBOT_NAME = config.get('Main','TeamName')
@@ -52,7 +52,7 @@ def setServoPulse(channel, pulse):
     # print "%d us per bit" % pulseLength
     pulse /= pulseLength
     # print "%d tick" % pulse
-    pwm.setPWM(channel, 0, pulse)
+    pwm.setPWM(channel, 0, int(pulse))
 
 
 # loging wrapper function
@@ -238,13 +238,13 @@ logWrite("Started all threads")
 atexit.register(cleanup)
 
 while True:
-    if not pwmThread.isAlive():
+    if not pwmThread.is_alive():
         pwmThread.run()
         logWrite("Restarting serial thread")
-    if not broadcastThread.isAlive():
+    if not broadcastThread.is_alive():
         broadcastThread.run()
         logWrite("Restarting broadcast listener thread")
-    if not networkThread.isAlive():
+    if not networkThread.is_alive():
         networkThread.run()
         logWrite("Restarting network thread")
     logWrite("loopdey-loop!")
