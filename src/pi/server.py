@@ -34,10 +34,12 @@ config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
 # change this to the relevant team name when the script is loaded to the yun
 ROBOT_NAME = config.get('Main','TeamName')
 PWM_FREQ = 50
+# LEFT_MOT = 0
 LEFT_MOT = 0
+# RIGHT_MOT = 1
 RIGHT_MOT = 1
-LEFT_MANIP = 4
-RIGHT_MANIP = 5
+# LEFT_MANIP = 4
+# RIGHT_MANIP = 5
 
 pwm = PWM(0x40)
 
