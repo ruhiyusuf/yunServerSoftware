@@ -56,7 +56,7 @@ def setServoPulse(channel, pulse):
 
 # loging wrapper function
 def logWrite(strng):
-    log.write("[" + str(time.time()) + "]" + strng + "\n")
+#    log.write("[" + str(time.time()) + "]" + strng + "\n")
     print(strng)
 
 
@@ -79,6 +79,8 @@ def broadcastListener():
 
     try:
         bCastSock.bind((BROADCAST_IP, BROADCAST_PORT))
+        logWrite("broadcastListener: bind to broadcast port")
+        logWrite(BROADCAST_PORT)
     except socket.error as msg:
         bCastSock.close()
         logWrite('Broadcast bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1] + "\n")
@@ -88,11 +90,16 @@ def broadcastListener():
     while True:
         readReady = select.select([bCastSock], [], [], 0.02)
         if readReady[0]:
-            data, sender = bCastSock.recvfrom(1500)
+            data, sender = bCastSock.recvfrom(2367)
+            logWrite("receiving from 2367")
+            # data, sender = bCastSock.recvfrom(1500)
             # check that the datagram is a alive packet
-            if data == sender[0]:
+            if True:
+            # if data == sender[0]:
                 lastKeepAlive = time.time()
                 broadcastQueue.put(sender)
+                logWrite("broadcastQueue put sender:")
+                logWrite(sender)
         time.sleep(.05)
 
 
@@ -208,7 +215,7 @@ def networkComThread():
             # broadcast name on interval
             if time.time() - nameBroadcastTimer > NAME_BROADCAST_TIMEOUT:
                 nameBroadcastTimer = time.time()
-                netSock.sendto('ROB:' + ROBOT_NAME, (host[0], PORT))
+                netSock.sendto(bytes('ROB:' + ROBOT_NAME, 'ascii'), (host[0], PORT))
                 logWrite("Sent robot name.")
 
 
