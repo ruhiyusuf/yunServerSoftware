@@ -43,6 +43,8 @@ RIGHT_MOT = 1
 
 pwm = PWM(0x40)
 
+leftMtr = 0 
+rightMtr = 0 
 
 def setServoPulse(channel, pulse):
     pulseLength = 1000000  # 1,000,000 us per second
@@ -124,12 +126,18 @@ def pwmControlThread():
 
         # if data was recieved parse and update pwm hat
         if dataFlag:
+            print("oops 1")
+            data = data.decode('utf-8')
             data = data[5:-1]
+            print("oops 2")
             print(data)
             data_nums = [int(x) for x in data.split(':') if x.strip()]
+            print("oops 3")
             print(" ", data_nums[0], " ", data_nums[1])
-            leftMtr,rightMtr = t.transform(data_nums[0],data_nums[1])
+            leftMtr,rightMtr = t.transform(int(data_nums[0]),int(data_nums[1]))
+            print("oops 4")
             print(" ", leftMtr , " ", rightMtr)
+            print("oops 5")
             setServoPulse(LEFT_MOT, leftMtr)
             setServoPulse(RIGHT_MOT, rightMtr)
 
@@ -139,30 +147,11 @@ def pwmControlThread():
             
             watchdog = time.time()
 
-"""
-            leftIntake = Transform.MOTOR_IDLE
-            rightIntake = Transform.MOTOR_IDLE
-            if data_nums[2] > 127 + 10: # if left trigger pressed (i think) spin motors in opposite direction
-                leftIntake = Transform.map_range(data_nums[2],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MAX)
-                rightIntake = Transform.map_range(data_nums[2],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MIN)
-            elif data_nums[3] > 127 + 10: # if right trigger pressed
-                leftIntake = Transform.map_range(data_nums[3],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MIN)
-                rightIntake = Transform.map_range(data_nums[3],127,255,Transform.MOTOR_IDLE,Transform.MOTOR_MAX)
-            else :
-                leftIntake = Transform.MOTOR_IDLE
-                rightIntake = Transform.MOTOR_IDLE
- 
-            print(" " , leftIntake, " ", rightIntake)
-
-            setServoPulse(LEFT_MANIP,leftIntake)
-            setServoPulse(RIGHT_MANIP,rightIntake)
-            watchdog = time.time()
-"""
         if watchdog + WATCHDOG_DELAY < time.time():
             setServoPulse(LEFT_MOT, Transform.MOTOR_IDLE)
             setServoPulse(RIGHT_MOT, Transform.MOTOR_IDLE)
-            setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
-            setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
+            # setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
+            # setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
 
             watchdog = time.time()
             print("you need to feed the dogs")
