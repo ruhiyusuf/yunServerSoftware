@@ -158,7 +158,7 @@ def pwmControlThread():
             setServoPulse(RIGHT_MANIP,rightIntake)
             watchdog = time.time()
 """
-      if watchdog + WATCHDOG_DELAY < time.time():
+        if watchdog + WATCHDOG_DELAY < time.time():
             setServoPulse(LEFT_MOT, Transform.MOTOR_IDLE)
             setServoPulse(RIGHT_MOT, Transform.MOTOR_IDLE)
             setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
