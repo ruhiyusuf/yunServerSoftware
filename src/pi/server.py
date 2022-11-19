@@ -136,8 +136,10 @@ def pwmControlThread():
             Transform.MOTOR_MIN = data_nums[5]*10
             Transform.MOTOR_IDLE = data_nums[6]*10
             Transform.MOTOR_MAX = data_nums[7]*10
+            
+            watchdog = time.time()
 
-
+"""
             leftIntake = Transform.MOTOR_IDLE
             rightIntake = Transform.MOTOR_IDLE
             if data_nums[2] > 127 + 10: # if left trigger pressed (i think) spin motors in opposite direction
@@ -154,10 +156,9 @@ def pwmControlThread():
 
             setServoPulse(LEFT_MANIP,leftIntake)
             setServoPulse(RIGHT_MANIP,rightIntake)
-
             watchdog = time.time()
-
-        if watchdog + WATCHDOG_DELAY < time.time():
+"""
+      if watchdog + WATCHDOG_DELAY < time.time():
             setServoPulse(LEFT_MOT, Transform.MOTOR_IDLE)
             setServoPulse(RIGHT_MOT, Transform.MOTOR_IDLE)
             setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
@@ -226,8 +227,8 @@ def cleanup():
     logWrite('cleanup')
     setServoPulse(LEFT_MOT,Transform.MOTOR_IDLE)
     setServoPulse(RIGHT_MOT,Transform.MOTOR_IDLE)	
-    setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
-    setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
+    # setServoPulse(LEFT_MANIP, Transform.MOTOR_IDLE)
+    # setServoPulse(RIGHT_MANIP, Transform.MOTOR_IDLE)
 
 
 # Main program start
