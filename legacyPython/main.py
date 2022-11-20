@@ -13,14 +13,14 @@ jstick_list = []
 for i in JOYSTICKS:
     jstick_list.append(pygame.joystick.Joystick(i))
 
+stop_threads = False
 
 def send_values(jstick, i):
+    global stop_threads
     while True:
         time.sleep(.005)
-        for event in pygame.event.get(): # get the events (update the joystick)
-            if event.type == QUIT: # allow to click on the X button to close the window
-                pygame.quit()
-                exit()
+        if stop_threads:
+            break
         if jstick.get_button(0):
             #print("stopped")
             break
@@ -35,13 +35,20 @@ def send_values(jstick, i):
 
 thread_list = []
 for i in range(0, len(jstick_list)):
-    thread_list.append(threading.Thread(target = send_values, args = (jstick_list[i], i), daemon = True))
+    thread_list.append(threading.Thread(target = send_values, args = (jstick_list[i], i)))
 
 
 for i in range(0, len(thread_list)):
     thread_list[i].start()
 
-
+while True:
+    for event in pygame.event.get(): # get the events (update the joystick)
+        if event.type == QUIT: # allow to click on the X button to close the window
+            stop_threads = True
+            for i in thread_list:
+                i.join()
+            pygame.quit()
+            exit()
 '''
 while True:
     time.sleep(.005)
