@@ -21,7 +21,7 @@ def send_values(jstick, i):
         time.sleep(.005)
         if stop_threads:
             break
-        if jstick.get_button(0):
+        if jstick.get_button(2):
             #print("stopped")
             break
         else:
@@ -29,7 +29,8 @@ def send_values(jstick, i):
             y = round(-jstick.get_axis(1), 3)
             manip1 = round(jstick.get_axis(4), 3)
             manip2 = round(jstick.get_axis(5), 3)
-            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2)
+            a_press = int(jstick.get_button(0))
+            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2) + ":" + str(a_press)
             #print(msg)
             sendUDP(msg, IP = RPI_IPS[i], port = 8080)
 
