@@ -22,7 +22,7 @@ def send_values(jstick, i):
                 pygame.quit()
                 exit()
         if jstick.get_button(0):
-            print("stopped")
+            #print("stopped")
             break
         else:
             x = round(jstick.get_axis(2), 3)
@@ -30,7 +30,7 @@ def send_values(jstick, i):
             manip1 = round(jstick.get_axis(4), 3)
             manip2 = round(jstick.get_axis(5), 3)
             msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2)
-            print(msg)
+            #print(msg)
             sendUDP(msg, IP = RPI_IPS[i], port = 8080)
 
 thread_list = []
