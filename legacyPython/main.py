@@ -5,7 +5,7 @@ import time
 
 pygame.init()
 #Attach joysticks before running
-JOYSTICKS = [1]
+JOYSTICKS = [0]
 RPI_IPS = ["192.168.86.33"]
 
 jstick_list = []
