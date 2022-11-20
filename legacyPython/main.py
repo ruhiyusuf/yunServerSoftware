@@ -29,6 +29,7 @@ while True:
             x = round(jstick_list[i].get_axis(2), 3)
             y = round(-jstick_list[i].get_axis(1), 3)
             manip1 = round(jstick_list[i].get_axis(4), 3)
-            msg = str(x) + ":" + str(y) + ":" + str(manip1)
+            manip2 = round(jstick_list[i].get_axis(5), 3)
+            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2)
             print(msg)
             sendUDP(msg, IP = RPI_IPS[i], port = 8080)
