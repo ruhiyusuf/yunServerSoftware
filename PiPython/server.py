@@ -36,7 +36,7 @@ def getData():
 
     data = str(message).split(":")
     print(data)
-    print(data[0][2:])
+    #print(data[0][2:])
     return [float(data[0][2:]), float(data[1][:-1])] #CHANGE PARSING HERE FOR FURTHER DATA INPUTS
     
 '''
