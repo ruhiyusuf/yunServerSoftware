@@ -1,4 +1,4 @@
-
+# test file for rpi - Server Side
 import socket
 localIP     = ""
 localPort   = 8080
