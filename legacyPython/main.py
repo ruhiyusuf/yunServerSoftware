@@ -19,4 +19,4 @@ while True:
         x = joystick.get_axis(0)
         y = joystick.get_axis(1)
         msg = str(x) + ":" + str(y)
-        sendUDP(msg)
+        sendUDP(msg, IP = "192.168.86.33", port = 2367)
