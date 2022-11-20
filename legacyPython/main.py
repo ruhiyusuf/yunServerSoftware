@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from UDP import sendUDP
 import time
+import threading
 
 pygame.init()
 #Attach joysticks before running
@@ -13,7 +14,35 @@ for i in JOYSTICKS:
     jstick_list.append(pygame.joystick.Joystick(i))
 
 
+def send_values(jstick, i):
+    while True:
+        time.sleep(.005)
+        for event in pygame.event.get(): # get the events (update the joystick)
+            if event.type == QUIT: # allow to click on the X button to close the window
+                pygame.quit()
+                exit()
+        if jstick.get_button(0):
+            print("stopped")
+            break
+        else:
+            x = round(jstick.get_axis(2), 3)
+            y = round(-jstick.get_axis(1), 3)
+            manip1 = round(jstick.get_axis(4), 3)
+            manip2 = round(jstick.get_axis(5), 3)
+            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2)
+            print(msg)
+            sendUDP(msg, IP = RPI_IPS[i], port = 8080)
 
+thread_list = []
+for i in range(0, len(jstick_list)):
+    thread_list.append(threading.Thread(target = send_values), args = (jstick_list[i], i), daemon = True)
+
+
+for i in range(0, len(thread_list)):
+    thread_list[i].start()
+
+
+'''
 while True:
     time.sleep(.005)
     for event in pygame.event.get(): # get the events (update the joystick)
@@ -33,3 +62,4 @@ while True:
             msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2)
             print(msg)
             sendUDP(msg, IP = RPI_IPS[i], port = 8080)
+'''
