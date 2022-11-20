@@ -4,8 +4,15 @@ from UDP import sendUDP
 import time
 
 pygame.init()
+#Attach joysticks before running
+JOYSTICKS = [1]
+RPI_IPS = ["192.168.86.33"]
 
-joystick = pygame.joystick.Joystick(0)
+jstick_list = []
+for i in JOYSTICKS:
+    jstick_list.append(pygame.joystick.Joystick(i))
+
+
 
 while True:
     time.sleep(.005)
@@ -14,12 +21,13 @@ while True:
             pygame.quit()
             exit()
 
-    if joystick.get_button(0):
+    if jstick_list[0].get_button(0):
         print("stopped")
         break
     else:
-        x = round(joystick.get_axis(2), 3)
-        y = round(-joystick.get_axis(1), 3)
-        msg = str(x) + ":" + str(y)
-        print(msg)
-        sendUDP(msg, IP = "192.168.86.33", port = 8080)
+        for i in range(0, len(jstick_list)):
+            x = round(jstick_list[i].get_axis(2), 3)
+            y = round(-jstick_list[i].get_axis(1), 3)
+            msg = str(x) + ":" + str(y)
+            print(msg)
+            sendUDP(msg, IP = RPI_IPS[i], port = 8080)
