@@ -32,7 +32,8 @@ config = configparser.ConfigParser()
 config.read('/home/pi/Documents/yunServerSoftware/src/pi/config.ini')
 
 # change this to the relevant team name when the script is loaded to the yun
-ROBOT_NAME = config.get('Main','TeamName')
+#ROBOT_NAME = config.get('Main','TeamName')
+ROBOT_NAME = "Thursday" #Im stupid
 PWM_FREQ = 50
 # LEFT_MOT = 0
 LEFT_MOT = 0

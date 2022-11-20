@@ -21,6 +21,8 @@ class Transform:
 
 
     def transform(self, left_y, right_x):
+        lftMtr = 0
+        rghtMtr = 0
         if 127-17 <= left_y <= 127+17:
             left_y = Transform.MOTOR_IDLE
         else:
@@ -76,7 +78,7 @@ class Transform:
                 rghtMtr = Transform.MOTOR_MAX
             elif rghtMtr < Transform.MOTOR_MIN:
                 rghtMtr = Transform.MOTOR_MIN
-            return lftMtr, rghtMtr
+        return lftMtr, rghtMtr
 
 t = Transform(False,False)
 print(t.transform(255,255))
