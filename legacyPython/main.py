@@ -35,7 +35,7 @@ def send_values(jstick, i):
 
 thread_list = []
 for i in range(0, len(jstick_list)):
-    thread_list.append(threading.Thread(target = send_values), args = (jstick_list[i], i), daemon = True)
+    thread_list.append(threading.Thread(target = send_values, args = (jstick_list[i], i), daemon = True))
 
 
 for i in range(0, len(thread_list)):
