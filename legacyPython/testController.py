@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-
+pygame.init()
 jstick = pygame.joystick.Joystick(0)
 
 while True:
