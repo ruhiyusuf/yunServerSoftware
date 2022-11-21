@@ -1,6 +1,8 @@
 #Scale controller x,y values in range(-1,1) to motor value from (1000, 2000)
 #Direction switch at 1500
 #
+import math
+
 MOTOR_MAX = 2000
 MOTOR_MIN = 1000
 MOTOR_IDLE = 1500
@@ -15,6 +17,33 @@ ARM_DIF = 100
 def map_range(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
+def driveTransform(leftY, rightX):
+    Lout = 0
+    Rout = 0
+    if (abs(leftY) < L_DEADZONE):
+        leftY = 0
+    if (abs(rightX) < R_DEADZONE):
+        rightX = 0
+    
+    if (leftY >= 0):
+        Lout = leftY + rightX
+        Rout = leftY - rightX
+    else:
+        Lout = leftY - rightX
+        Rout = leftY + rightX
+
+    if (Lout != 0):
+        Lout = math.copysign((1/(1-L_DEADZONE)) * abs(Lout) - (L_DEADZONE/(1-L_DEADZONE)), Lout)
+    if (Rout != 0):
+        Rout = math.copysign((1/(1-R_DEADZONE)) * abs(Rout) - (R_DEADZONE/(1-R_DEADZONE)), Rout)
+
+    Lout = math.copysign(Lout ** 2, Lout)
+    Rout = math.copysign(Rout ** 2, Rout)
+
+    Lout = map_range(Lout, -1, 1, 1000, 2000)
+    Rout = map_range(Rout, -1, 1, 1000, 2000)
+    return Lout, Rout
+'''
 def driveTransform(leftY, rightX, invert_right = False, invert_left = False): #Return motor value from leftY rightX
     lftMtr = 0
     rghtMtr = 0
@@ -73,7 +102,7 @@ def driveTransform(leftY, rightX, invert_right = False, invert_left = False): #R
             rghtMtr = MOTOR_MIN
 
     return lftMtr, rghtMtr
- 
+'''
 
 def tuesdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     manipL = 0
@@ -132,9 +161,9 @@ def fridayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press): #Left,
     m_left, m_right = driveTransform(leftY, rightX)
     triggerL += 1
     triggerR += 1
-    if triggerR > triggerL:
+    if triggerR > 0.1:
         manipL = MOTOR_IDLE + ARM_DIF
-    else:
+    if triggerL > 0.1:
         manipL = MOTOR_IDLE - ARM_DIF
     if b_press:
         manipR = MOTOR_IDLE + INTAKE_DIF
