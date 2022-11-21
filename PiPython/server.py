@@ -74,8 +74,8 @@ def motor_update():
         last_left = m_left
         last_right = m_right
         last_time = time.time()
-        m_left = data[0]
-        m_right = data[1]
+        m_left = data[1]
+        m_right = data[0]
         trigger_1 = data[2]
         trigger_2 = data[3]
         a_press = data[4]
