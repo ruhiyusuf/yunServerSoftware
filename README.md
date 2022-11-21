@@ -11,7 +11,8 @@ Thus, it makes sense to find a solution that has the minimum requirements to mak
 Because we chose to go with the Arduino Yun, custom software had to be written for it. This is the software to run the server which the Yuns connect to and allow for control of the robots. 
 
 ## Installation
+- Needs python3
+- pygame
+- Adafruit Pihat
+- Don't run the curl command
 
-`
-curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/yunServerSoftware/master/src/installPiServer.sh | bash
-`
