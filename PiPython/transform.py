@@ -24,6 +24,8 @@ def driveTransform(leftY, rightX):
         leftY = 0
     if (abs(rightX) < R_DEADZONE):
         rightX = 0
+        if leftY == 0:
+            return 0, 0
     
     if (leftY >= 0):
         Lout = leftY + rightX
@@ -32,16 +34,25 @@ def driveTransform(leftY, rightX):
         Lout = leftY - rightX
         Rout = leftY + rightX
 
-    if (Lout != 0):
-        Lout = math.copysign((1/(1-L_DEADZONE)) * abs(Lout) - (L_DEADZONE/(1-L_DEADZONE)), Lout)
-    if (Rout != 0):
-        Rout = math.copysign((1/(1-R_DEADZONE)) * abs(Rout) - (R_DEADZONE/(1-R_DEADZONE)), Rout)
 
     Lout = math.copysign(Lout ** 2, Lout)
     Rout = math.copysign(Rout ** 2, Rout)
 
-    Lout = map_range(Lout, -1, 1, 1000, 2000)
-    Rout = map_range(Rout, -1, 1, 1000, 2000)
+    Lout = map_range(Lout, -1, 1, MOTOR_MIN, MOTOR_MAX)
+    Rout = map_range(Rout, -1, 1, MOTOR_MIN, MOTOR_MAX)
+
+    def bound(inp):
+        if inp == 0:
+            return 0
+        if inp > MOTOR_MAX:
+            return MOTOR_MAX
+        elif inp < MOTOR_MIN:
+            return MOTOR_MIN
+        else:
+            return inp
+    Lout = bound(Lout)
+    Rout = bound(Rout)
+            
     return Lout, Rout
 '''
 def driveTransform(leftY, rightX, invert_right = False, invert_left = False): #Return motor value from leftY rightX
@@ -110,9 +121,9 @@ def tuesdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     m_left, m_right = driveTransform(leftY, rightX)
     triggerL += 1
     triggerR += 1
-    if triggerR > triggerL:
+    if triggerR > 0.1:
         manipL = MOTOR_IDLE + ARM_DIF
-    else:
+    if triggerL > 0.1:
         manipL = MOTOR_IDLE - ARM_DIF
     if b_press:
         manipR = MOTOR_IDLE + INTAKE_DIF
@@ -127,9 +138,9 @@ def wednesdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     m_left, m_right = driveTransform(leftY, rightX)
     triggerL += 1
     triggerR += 1
-    if triggerR > triggerL:
+    if triggerR > 0.1:
         manipL = MOTOR_IDLE + ARM_DIF
-    else:
+    if triggerL > 0.1:
         manipL = MOTOR_IDLE - ARM_DIF
     if b_press:
         manipR = MOTOR_IDLE + INTAKE_DIF
@@ -144,9 +155,9 @@ def thursdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     m_left, m_right = driveTransform(leftY, rightX)
     triggerL += 1
     triggerR += 1
-    if triggerR > triggerL:
+    if triggerR > 0.1:
         manipL = MOTOR_IDLE + ARM_DIF
-    else:
+    if triggerL > 0.1:
         manipL = MOTOR_IDLE - ARM_DIF
     if b_press:
         manipR = MOTOR_IDLE + INTAKE_DIF
