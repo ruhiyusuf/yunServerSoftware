@@ -2,7 +2,7 @@
 import socket
 import time
 import threading
-
+from transform import *
 
 
 localIP     = ""
@@ -17,12 +17,10 @@ print("UDP server up and listening")
 TIME_DELAY = 5
 ROBOT_NAME = "Thursday" #Im stupid
 PWM_FREQ = 50
-# LEFT_MOT = 0
 LEFT_MOT = 0
-# RIGHT_MOT = 1
 RIGHT_MOT = 1
-# LEFT_MANIP = 4
-# RIGHT_MANIP = 5
+LEFT_MANIP = 4 #One manipulator for Intake/Rotation
+RIGHT_MANIP = 5 #Second manipualtor for intake/rotation
 
 #pwm = PWM(0x40)
 
@@ -61,6 +59,7 @@ last_right = 0
 last_time = time.time()
 stop_thread = False
 
+
 def motor_update():
     global m_left
     global m_right
@@ -77,9 +76,29 @@ def motor_update():
         last_time = time.time()
         m_left = data[0]
         m_right = data[1]
-        #transform code Here
-        #setServoPulse(LEFT_MOT, leftMtr)
-        #setServoPulse(RIGHT_MOT, rightMtr)
+        trigger_1 = data[2]
+        trigger_2 = data[3]
+        a_press = data[4]
+        b_press = data[5]
+
+        
+        if ROBOT_NAME == "Tuesday":
+            L, R, ML, MR = tuesdayTransform(m_left, m_right, trigger_1, trigger_2, a_press, b_press)
+        elif ROBOT_NAME == "Wednesday":
+            L, R, ML, MR = wednesdayTransform(m_left, m_right, trigger_1, trigger_2, a_press, b_press)
+        elif ROBOT_NAME == "Thursday":
+            L, R, ML, MR = thursdayTransform(m_left, m_right, trigger_1, trigger_2, a_press, b_press)
+        elif ROBOT_NAME == "Friday":
+            L, R, ML, MR = fridayTransform(m_left, m_right, trigger_1, trigger_2, a_press, b_press)
+        else:
+            print("no team name configured")
+            L, R, ML, MR = 0, 0, 0, 0
+        list = [L, R, ML, MR]
+        print(list)
+        #setServoPulse(LEFT_MOT, L)
+        #setServoPulse(RIGHT_MOT, R)
+        #setServoPulse(LEFT_MANIP, ML)
+        #setServoPulse(RIGHT_MANIP, MR)
     
 
 

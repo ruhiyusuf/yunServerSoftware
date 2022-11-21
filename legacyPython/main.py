@@ -30,7 +30,8 @@ def send_values(jstick, i):
             manip1 = round(jstick.get_axis(4), 3)
             manip2 = round(jstick.get_axis(5), 3)
             a_press = int(jstick.get_button(0))
-            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2) + ":" + str(a_press)
+            b_press = int(jstick.get_button(1))
+            msg = str(x) + ":" + str(y) + ":" + str(manip1) + ":" + str(manip2) + ":" + str(a_press) + ":" + str(b_press)
             #print(msg)
             sendUDP(msg, IP = RPI_IPS[i], port = 8080)
 
