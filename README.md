@@ -16,3 +16,21 @@ Because we chose to go with the Arduino Yun, custom software had to be written f
 - Adafruit Pihat
 - Don't run the curl command
 
+## Setup
+- git clone
+- git checkout separateUDP
+- SSH to each pi & make sure they are on same wifi as laptop
+- Get ip of each pi and enter them in rpi list in legacyPython/main.py
+- Add numbers for joystick list in same file(should be 0 thru n)
+
+- On laptop:
+- pip3 install pygame
+- Connect all controllers before program starts
+- python3 main.py
+- To end program on all devices press X on each controller
+- Each pi should stop motors after 5 seconds(5 is changeable)
+
+On rpi:
+- Customize transform funcs for each team
+- Enter team name as string in server.py(Or enter on program start)
+- python3 server.py
