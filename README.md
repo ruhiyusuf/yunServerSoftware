@@ -23,11 +23,11 @@ Because we chose to go with the Arduino Yun, custom software had to be written f
 - Get ip of each pi and enter them in rpi list in legacyPython/main.py
 - Add numbers for joystick list in same file(should be 0 thru n)
 
-- On laptop:
+On laptop:
 - pip3 install pygame
 - Connect all controllers before program starts
 - python3 main.py
-- To end program on all devices press X on each controller
+- **To end program on all devices press X on each controller**
 - Each pi should stop motors after 5 seconds(5 is changeable)
 
 On rpi:
