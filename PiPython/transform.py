@@ -147,7 +147,7 @@ def wednesdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     if a_press:
         manipR = MOTOR_IDLE - INTAKE_DIF
 
-    return m_left, m_right, manipL, manipR
+    return m_left, m_right, manipL, 0
 
 def thursdayTransform(leftY, rightX, triggerL, triggerR, a_press, b_press):
     manipL = 0

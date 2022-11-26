@@ -13,14 +13,18 @@ UDPServerSocket.bind((localIP, localPort))
 print("UDP server up and listening")
 
 
-
+teams = ["Tuesday", "Wednesday", "Thursday", "Friday"]
 TIME_DELAY = 5
-ROBOT_NAME = "Thursday" #Im stupid
+ROBOT_NAME = str(input("Enter team name:")) #Im stupid
+while not(ROBOT_NAME in teams):
+    ROBOT_NAME = str(input("Enter valid team name:"))
 PWM_FREQ = 50
-LEFT_MOT = 0
-RIGHT_MOT = 1
-LEFT_MANIP = 4 #One manipulator for Intake/Rotation
-RIGHT_MANIP = 5 #Second manipualtor for intake/rotation
+
+
+LEFT_MOT = int(input("Left Mot(0):"))
+RIGHT_MOT = int(input("Right Mot(1):"))
+LEFT_MANIP = int(input("Left Manip(4):")) #One manipulator for Intake/Rotation
+RIGHT_MANIP = int(input("Right Manip(5):")) #Second manipualtor for intake/rotation
 
 #pwm = PWM(0x40)
 
@@ -119,6 +123,8 @@ def motor_watch():
                 stop_thread = True
                 #setServoPulse(LEFT_MOT, 0)
                 #setServoPulse(RIGHT_MOT, 0)
+                #setServoPulse(LEFT_MANIP, 0)
+                #setServoPulse(RIGHT_MANIP, 0)
                 print("Data reception went overtime!")
                 break
 
