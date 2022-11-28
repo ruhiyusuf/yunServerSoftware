@@ -8,6 +8,9 @@ class Transform:
     MOTOR_MAX = 2000
     L_STICK_DEADZONE = 17
     R_STICK_DEADZONE = 17
+    SLEW_LIMIT = 42.0
+    last_lefty = 0
+    last_rightx = 0
 
     def __init__(self,invert_left_axis,invert_right_axis):
         self.invert_left = invert_left_axis
@@ -18,9 +21,20 @@ class Transform:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 
-
+    def slew_limit(input, last, limit):
+        if abs(input - last) > limit:
+            if input > last:
+                input = last + 0.5
+            else:
+                input = last - 0.5
 
     def transform(self, left_y, right_x):
+        
+    left_y = Transform.slew_limit(left_y, self.last_lefty, Transform.SLEW_LIMIT)
+    right_x = Transform.slew_limit(right_x, self.last_rightx, Transform.SLEW_LIMIT)
+    self.last_rightx = right_x
+    self.last_leftx = left_y
+    
         if 127-17 <= left_y <= 127+17:
 		left_y = Transform.MOTOR_IDLE
 	else:
