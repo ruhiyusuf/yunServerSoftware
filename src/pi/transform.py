@@ -24,12 +24,12 @@ class Transform:
     def slew_limit(input, last, limit):
         if abs(input - last) > limit:
             if input > last:
-                input = last + 0.5
+                input = last + limit
             else:
-                input = last - 0.5
+                input = last - limit
 
     def transform(self, left_y, right_x):
-        
+
     left_y = Transform.slew_limit(left_y, self.last_lefty, Transform.SLEW_LIMIT)
     right_x = Transform.slew_limit(right_x, self.last_rightx, Transform.SLEW_LIMIT)
     self.last_rightx = right_x
